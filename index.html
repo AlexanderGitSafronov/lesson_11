@@ -7,37 +7,51 @@
     <title>Document</title>
 </head>
 <body>
-<script> 
-    const todo = {
-        notes: [],
-        create(title, text) {
-            const isNotUnique = this.isNotUnique({title, text});
-            if(isNotUnique){
-                throw new Error('Not unique');
-            }
-            const note = {
-                title,
-                text,
-                isComplete: false,
-            };
-            this.notes.push(note);
-        },
-        remove(value){
+    <script>
+        const todo = {
+            notes: [],
+            create(title, text){
+                const isNotUnique = this.isNotUnique({title, text});
+                
+                if(isNotUnique){
+                    throw new Error('Not unique')
+                }
+
+                const note = {
+                    title,
+                    text,
+                    isComplete: false,
+                };
+
+                this.notes.push(note);
+            },
+            remove(value){
             this.notes = this.notes.filter(note => note.title !== value);
-        },
-        edit(value, payload){
+             },
+            edit(value, payload){
             const note = this.notes.find(note => note.title === value);
             if(!note){
-                throw new Error('We can find note :(');
+                throw new Error('We cann find note'); 
             }
-            const isNotUnique = this.isNotUnique(payload); 
-            if(isNotUnique){
-                throw new Error('Not unique');
-            }
-            note.title = payload.title || note.title;
-            note.text = payload.text || note.text;
-        },
-        getStatistic(){
+
+            const isNotUnique = this.isNotUnique(payload);
+                
+                if(isNotUnique){
+                    throw new Error('Not unique')
+                }
+
+                note.title = payload.title || note.title;
+                note.text = payload.text || note.text;
+            },
+            isNotUnique({title, text}){
+            const note = this.notes.find(note => {
+                if(title === note.title || text === note.text){
+                            return true;
+                }
+            });
+            return !!note ;
+             },
+             getStatistic(){
             return this.notes.reduce((prev, note) => {
                 if(note.completed) {
                      prev.completed++
@@ -50,21 +64,14 @@
                 completed: 0,
                 uncompleted: 0,
             })
-        },
-        isNotUnique({title, text}){
-            const note = this.notes.find(note => {
-                if(title === note.title || text === note.text){
-                            return true;
-                }
-            });
-            return !!note ;
-        },
-    };
-    todo.create('Create todo app', 'We shoild create todo app');
-    //todo.create('Create app', 'We shoild create todo app');
-    //todo.create('Create todo', 'We shoild create todo app');
-    todo.edit('Create app',{title:'Create todo', text: 'We need create todo app' });
-    console.log(todo.getStatistic());
-</script>
+            },
+        };
+        todo.create('Create todo app', 'We should create todo app');
+        todo.create('Create app', 'We should create app');
+        //todo.create('Create todo', 'We should create todo app');
+        //todo.remove('Create todo app');
+       // todo.edit('Create todo app', {title:'Create todo', text:'We should create  app'});
+        console.log(todo.getStatistic());
+    </script>
 </body>
 </html>
