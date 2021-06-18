@@ -1,0 +1,70 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script> 
+    const todo = {
+        notes: [],
+        create(title, text) {
+            const isNotUnique = this.isNotUnique({title, text});
+            if(isNotUnique){
+                throw new Error('Not unique');
+            }
+            const note = {
+                title,
+                text,
+                isComplete: false,
+            };
+            this.notes.push(note);
+        },
+        remove(value){
+            this.notes = this.notes.filter(note => note.title !== value);
+        },
+        edit(value, payload){
+            const note = this.notes.find(note => note.title === value);
+            if(!note){
+                throw new Error('We can find note :(');
+            }
+            const isNotUnique = this.isNotUnique(payload); 
+            if(isNotUnique){
+                throw new Error('Not unique');
+            }
+            note.title = payload.title || note.title;
+            note.text = payload.text || note.text;
+        },
+        getStatistic(){
+            return this.notes.reduce((prev, note) => {
+                if(note.completed) {
+                     prev.completed++
+                } else {
+                     prev.uncompleted++ 
+                }
+                return prev;
+            }, {
+                total: this.notes.length,
+                completed: 0,
+                uncompleted: 0,
+            })
+        },
+        isNotUnique({title, text}){
+            const note = this.notes.find(note => {
+                if(title === note.title || text === note.text){
+                            return true;
+                }
+            });
+            return !!note ;
+        },
+    };
+    todo.create('Create todo app', 'We shoild create todo app');
+    //todo.create('Create app', 'We shoild create todo app');
+    //todo.create('Create todo', 'We shoild create todo app');
+    todo.edit('Create app',{title:'Create todo', text: 'We need create todo app' });
+    console.log(todo.getStatistic());
+</script>
+</body>
+</html>
